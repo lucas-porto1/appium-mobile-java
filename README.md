@@ -64,7 +64,7 @@ On Windows PowerShell:
 Copy-Item .env.example .env
 ```
 
-Create an Android Virtual Device through Android Studio's Device Manager using a Pixel 6 profile, the Google APIs Android 35 x86_64 image, and the name `Appium_API_35`. When using a real device instead, enable USB debugging and update `ANDROID_UDID` in `.env` with the identifier reported by `adb devices`.
+Create an Android Virtual Device through Android Studio's Device Manager using a Pixel 6 profile, an Android 35 x86_64 image, and the name `Appium_API_35`. When using a real device instead, enable USB debugging and update `ANDROID_UDID` in `.env` with the identifier reported by `adb devices`.
 
 ## Daily execution
 
