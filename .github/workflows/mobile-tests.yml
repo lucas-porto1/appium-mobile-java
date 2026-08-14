@@ -52,19 +52,7 @@ jobs:
           profile: pixel_6
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader -noaudio -no-boot-anim -no-snapshot -camera-back none
-          script: |
-            npm run appium:start > appium.log 2>&1 &
-            for attempt in {1..30}; do
-              if curl --fail --silent http://127.0.0.1:4723/status > /dev/null; then
-                break
-              fi
-              if [ "$attempt" -eq 30 ]; then
-                cat appium.log
-                exit 1
-              fi
-              sleep 1
-            done
-            ./mvnw --batch-mode --no-transfer-progress test
+          script: bash scripts/run-mobile-tests-ci.sh
       - name: Upload failure artifacts
         if: failure()
         uses: actions/upload-artifact@v7

@@ -121,7 +121,8 @@ npm run appium:drivers  # list the locally installed Appium drivers
 |   |-- workflows/                  # Android emulator CI execution
 |   `-- dependabot.yml              # semiannual dependency updates
 |-- scripts/
-|   `-- download-demo-app.mjs       # reproducible demo APK download
+|   |-- download-demo-app.mjs       # reproducible demo APK download
+|   `-- run-mobile-tests-ci.sh      # Appium startup and CI test execution
 |-- src/test/java/io/github/lucasporto/appium/
 |   |-- config/                     # validated environment configuration
 |   |-- driver/                     # Android driver creation
