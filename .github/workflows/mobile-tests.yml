@@ -1,0 +1,79 @@
+name: Mobile Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile-tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    env:
+      APPIUM_SERVER_URL: http://127.0.0.1:4723
+      ANDROID_DEVICE_NAME: GitHub Actions Android Emulator
+      ANDROID_UDID: emulator-5554
+      APP_PATH: apps/ApiDemos-debug.apk
+      ELEMENT_TIMEOUT_SECONDS: 20
+      NEW_COMMAND_TIMEOUT_SECONDS: 120
+    steps:
+      - uses: actions/checkout@v7
+      - name: Prepare Maven Wrapper
+        run: chmod +x mvnw
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 25
+          cache: maven
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install Appium toolchain
+        run: npm ci
+      - name: Download demo application
+        run: npm run setup:app
+      - name: Install Android Build Tools
+        run: sdkmanager "build-tools;35.0.0"
+      - name: Check formatting and compilation
+        run: ./mvnw --batch-mode --no-transfer-progress -DskipTests verify
+      - name: Run tests on Android emulator
+        uses: reactivecircus/android-emulator-runner@v2.38.0
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader -noaudio -no-boot-anim -no-snapshot -camera-back none
+          script: |
+            npm run appium:start > appium.log 2>&1 &
+            for attempt in {1..30}; do
+              if curl --fail --silent http://127.0.0.1:4723/status > /dev/null; then
+                break
+              fi
+              if [ "$attempt" -eq 30 ]; then
+                cat appium.log
+                exit 1
+              fi
+              sleep 1
+            done
+            ./mvnw --batch-mode --no-transfer-progress test
+      - name: Upload failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: appium-failure-artifacts
+          path: |
+            target/screenshots
+            appium.log
+          if-no-files-found: ignore
+          retention-days: 7

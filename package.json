@@ -1,0 +1,21 @@
+{
+  "name": "appium-mobile-java",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "setup:app": "node scripts/download-demo-app.mjs",
+    "appium:start": "appium --base-path / --log-timestamp",
+    "appium:doctor": "appium driver doctor uiautomator2",
+    "appium:drivers": "appium driver list --installed"
+  },
+  "devDependencies": {
+    "appium": "^3.6.0",
+    "appium-uiautomator2-driver": "^8.4.0"
+  },
+  "allowScripts": {
+    "appium": true
+  }
+}
