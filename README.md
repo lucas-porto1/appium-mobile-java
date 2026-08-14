@@ -179,7 +179,7 @@ Tests run sequentially because the default environment provides a single Android
 
 Maven Surefire writes machine-readable XML and text results to `target/surefire-reports/`. Running `./mvnw verify` also creates the human-readable report at `target/reports/mobile-test-report.html`.
 
-In CI, a failing test is rerun once to identify intermittent behavior. A test that passes only on the retry is reported as flaky and still fails the workflow, so retries provide evidence without hiding instability. Test reports are uploaded for every run. Screenshots, page sources, device logcat, and the Appium server log are uploaded when the workflow fails.
+In CI, a failing test is rerun once to identify intermittent behavior. A test that passes only on the retry produces a visible workflow warning and remains recorded as flaky in the report. A failure that persists after the retry fails the workflow. Test reports are uploaded for every run. Screenshots, page sources, device logcat, and the Appium server log are uploaded when the workflow fails.
 
 ## Adding a feature
 

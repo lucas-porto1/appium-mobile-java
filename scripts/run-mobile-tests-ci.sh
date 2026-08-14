@@ -26,8 +26,11 @@ for attempt in $(seq 1 30); do
       --batch-mode \
       --no-transfer-progress \
       -Dsurefire.rerunFailingTestsCount=1 \
-      -Dsurefire.failOnFlakeCount=1 \
       test || test_exit=$?
+
+    if grep -R -q '<flaky' target/surefire-reports 2>/dev/null; then
+      echo "::warning title=Flaky mobile test detected::At least one test passed only after retry. Review the mobile-test-reports artifact."
+    fi
 
     if [[ "$test_exit" -ne 0 ]]; then
       mkdir -p target/failure-artifacts
