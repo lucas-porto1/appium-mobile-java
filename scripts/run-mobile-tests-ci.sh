@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+appium_status_url="${APPIUM_SERVER_URL:-http://127.0.0.1:4723}"
+appium_status_url="${appium_status_url%/}/status"
+
 npm run appium:start > appium.log 2>&1 &
 appium_pid=$!
 
@@ -15,9 +18,23 @@ cleanup() {
 trap cleanup EXIT
 
 for attempt in $(seq 1 30); do
-  if curl --fail --silent http://127.0.0.1:4723/status > /dev/null; then
-    ./mvnw --batch-mode --no-transfer-progress test
-    exit 0
+  if curl --fail --silent "$appium_status_url" > /dev/null; then
+    adb logcat -c || true
+
+    test_exit=0
+    ./mvnw \
+      --batch-mode \
+      --no-transfer-progress \
+      -Dsurefire.rerunFailingTestsCount=1 \
+      -Dsurefire.failOnFlakeCount=1 \
+      test || test_exit=$?
+
+    if [[ "$test_exit" -ne 0 ]]; then
+      mkdir -p target/failure-artifacts
+      adb logcat -d -v threadtime > target/failure-artifacts/device-logcat.txt 2>&1 || true
+    fi
+
+    exit "$test_exit"
   fi
 
   if ! kill -0 "$appium_pid" 2>/dev/null; then

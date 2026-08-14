@@ -1,8 +1,8 @@
-package io.github.lucasporto.appium.driver;
+package io.github.lucasporto1.appium.driver;
 
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
-import io.github.lucasporto.appium.config.TestEnvironment;
+import io.github.lucasporto1.appium.config.TestEnvironment;
 import java.net.MalformedURLException;
 
 public final class DriverFactory {

@@ -58,13 +58,26 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader -noaudio -no-boot-anim -no-snapshot -no-metrics -camera-back none
           script: bash scripts/run-mobile-tests-ci.sh
+      - name: Generate HTML test report
+        if: always()
+        run: ./mvnw --batch-mode --no-transfer-progress -DskipTests surefire-report:report-only
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: mobile-test-reports
+          path: |
+            target/reports
+            target/surefire-reports
+          if-no-files-found: warn
+          retention-days: 14
       - name: Upload failure artifacts
         if: failure()
         uses: actions/upload-artifact@v7
         with:
           name: appium-failure-artifacts
           path: |
-            target/screenshots
+            target/failure-artifacts
             appium.log
           if-no-files-found: ignore
           retention-days: 7

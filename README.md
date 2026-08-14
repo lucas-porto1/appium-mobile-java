@@ -1,8 +1,10 @@
 # Appium Mobile - Java Reference
 
+[![Mobile Tests](https://github.com/lucas-porto1/appium-mobile-java/actions/workflows/mobile-tests.yml/badge.svg?branch=master)](https://github.com/lucas-porto1/appium-mobile-java/actions/workflows/mobile-tests.yml)
+
 A modern Android test automation reference project using Appium 3, Java, JUnit, Maven, and the UiAutomator2 driver.
 
-The project uses Appium's official Android ApiDemos application to demonstrate native navigation, alerts, form controls, gestures, explicit waits, failure screenshots, environment configuration, and Android emulator execution in GitHub Actions.
+The project uses Appium's official Android ApiDemos application to demonstrate native navigation, alerts, form controls, gestures, explicit waits, failure artifacts, test reports, environment configuration, and Android emulator execution in GitHub Actions.
 
 ## Design principles
 
@@ -34,7 +36,7 @@ The project uses Appium's official Android ApiDemos application to demonstrate n
 
 The Android Emulator requires hardware virtualization. On Windows, prefer Windows Hypervisor Platform.
 
-## Getting started
+## First-time setup
 
 Install the pinned Appium server and Android driver:
 
@@ -48,6 +50,8 @@ Download the official ApiDemos APK used by the tests:
 npm run setup:app
 ```
 
+The command is idempotent: it skips the download when the expected APK is already available and its checksum is valid.
+
 Create the local environment file:
 
 ```bash
@@ -59,6 +63,10 @@ On Windows PowerShell:
 ```powershell
 Copy-Item .env.example .env
 ```
+
+Create an Android Virtual Device through Android Studio's Device Manager using a Pixel 6 profile, the Google APIs Android 35 x86_64 image, and the name `Appium_API_35`. When using a real device instead, enable USB debugging and update `ANDROID_UDID` in `.env` with the identifier reported by `adb devices`.
+
+## Daily execution
 
 List the available Android Virtual Devices and start the emulator used by the default `.env` configuration:
 
@@ -110,8 +118,14 @@ npm run appium:doctor   # validate UiAutomator2 prerequisites
 npm run appium:drivers  # list the locally installed Appium drivers
 ./mvnw test             # execute the mobile tests
 ./mvnw spotless:apply   # format Java source files
-./mvnw verify           # compile, test, and check formatting
+./mvnw verify           # compile, test, check formatting, and generate the HTML report
 ```
+
+## Troubleshooting
+
+- **`JAVA_HOME not found`:** configure `JAVA_HOME` for Java 25 or 26, then open a new terminal and run `java -version`.
+- **No connected Android device:** start the emulator, wait for `adb devices` to show the status `device`, and confirm that its identifier matches `ANDROID_UDID` in `.env`.
+- **Unable to connect to Appium:** keep `npm run appium:start` running in a separate terminal and confirm that `APPIUM_SERVER_URL` points to that server.
 
 ## Project structure
 
@@ -123,12 +137,12 @@ npm run appium:drivers  # list the locally installed Appium drivers
 |-- scripts/
 |   |-- download-demo-app.mjs       # reproducible demo APK download
 |   `-- run-mobile-tests-ci.sh      # Appium startup and CI test execution
-|-- src/test/java/io/github/lucasporto/appium/
+|-- src/test/java/io/github/lucasporto1/appium/
 |   |-- config/                     # validated environment configuration
 |   |-- driver/                     # Android driver creation
 |   |-- screens/                    # selectors and screen interactions
-|   |-- support/                    # failure screenshot extension
-|   `-- tests/                      # scenarios, lifecycle, and assertions
+|   |-- support/                    # test lifecycle and failure diagnostics
+|   `-- tests/                      # executable scenarios and assertions
 |-- .env.example                    # documented local configuration contract
 |-- package.json                    # Appium server and driver toolchain
 |-- pom.xml                         # Java dependencies and build configuration
@@ -155,9 +169,17 @@ The downloaded APK is stored under `apps/` locally and is intentionally ignored 
 - Native navigation and Android alert handling
 - Text input and checkbox state validation
 - W3C touch gesture for drag and drop
-- Screenshot capture under `target/screenshots/` when a test fails
+- Screenshot and page-source capture under `target/failure-artifacts/` when a test fails
 
 Each test starts a fresh Appium session, so scenarios do not depend on execution order or state left by another test.
+
+## Execution, flakiness, and reports
+
+Tests run sequentially because the default environment provides a single Android emulator. Parallel mobile execution requires a separate device or emulator, UDID, and UiAutomator2 system port for each worker.
+
+Maven Surefire writes machine-readable XML and text results to `target/surefire-reports/`. Running `./mvnw verify` also creates the human-readable report at `target/reports/mobile-test-report.html`.
+
+In CI, a failing test is rerun once to identify intermittent behavior. A test that passes only on the retry is reported as flaky and still fails the workflow, so retries provide evidence without hiding instability. Test reports are uploaded for every run. Screenshots, page sources, device logcat, and the Appium server log are uploaded when the workflow fails.
 
 ## Adding a feature
 
@@ -170,6 +192,8 @@ Each test starts a fresh Appium session, so scenarios do not depend on execution
 
 ## Continuous integration
 
-GitHub Actions provisions Java and Node.js, installs the pinned Appium toolchain, downloads the demo APK, boots an Android API 35 emulator, starts Appium, and runs the complete suite. Failure screenshots and the Appium server log are uploaded as short-lived artifacts.
+GitHub Actions provisions Java and Node.js, installs the pinned Appium toolchain, downloads the demo APK, boots an Android API 35 emulator, starts Appium, and runs the complete suite. Reports and failure diagnostics are uploaded as short-lived artifacts.
 
 No secrets are required for the public ApiDemos application. Real application credentials must be stored in a local `.env` file and GitHub Actions secrets, never committed to the repository.
+
+Failure screenshots, page sources, logs, and reports can contain application data. Review the repository visibility and artifact retention policy before using this template with sensitive environments.

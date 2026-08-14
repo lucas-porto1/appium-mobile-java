@@ -1,4 +1,4 @@
-package io.github.lucasporto.appium.screens;
+package io.github.lucasporto1.appium.screens;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;

@@ -1,10 +1,9 @@
-package io.github.lucasporto.appium.support;
+package io.github.lucasporto1.appium.support;
 
-import io.github.lucasporto.appium.tests.BaseMobileTest;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-public final class ScreenshotOnFailureExtension implements AfterTestExecutionCallback {
+public final class FailureArtifactsOnFailureExtension implements AfterTestExecutionCallback {
 
   @Override
   public void afterTestExecution(ExtensionContext context) {
@@ -14,7 +13,11 @@ public final class ScreenshotOnFailureExtension implements AfterTestExecutionCal
 
     var testInstance = context.getRequiredTestInstance();
     if (testInstance instanceof BaseMobileTest mobileTest) {
-      mobileTest.captureScreenshot(context.getRequiredTestMethod().getName());
+      var artifactName =
+          context.getRequiredTestClass().getSimpleName()
+              + "-"
+              + context.getRequiredTestMethod().getName();
+      mobileTest.activeDriver().ifPresent(driver -> FailureArtifacts.capture(driver, artifactName));
     }
   }
 }

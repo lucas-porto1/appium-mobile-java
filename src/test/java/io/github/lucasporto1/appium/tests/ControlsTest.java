@@ -1,10 +1,11 @@
-package io.github.lucasporto.appium.tests;
+package io.github.lucasporto1.appium.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.github.lucasporto.appium.screens.HomeScreen;
+import io.github.lucasporto1.appium.screens.HomeScreen;
+import io.github.lucasporto1.appium.support.BaseMobileTest;
 import org.junit.jupiter.api.Test;
 
 class ControlsTest extends BaseMobileTest {

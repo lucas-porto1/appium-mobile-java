@@ -1,4 +1,4 @@
-package io.github.lucasporto.appium.config;
+package io.github.lucasporto1.appium.config;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import java.net.URI;

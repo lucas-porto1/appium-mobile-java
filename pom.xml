@@ -19,8 +19,9 @@
     <selenium.version>4.43.0</selenium.version>
     <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
     <maven-enforcer-plugin.version>3.6.3</maven-enforcer-plugin.version>
-    <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
+    <maven-jar-plugin.version>3.5.1</maven-jar-plugin.version>
     <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
+    <maven-surefire-report-plugin.version>3.5.5</maven-surefire-report-plugin.version>
     <spotless-maven-plugin.version>3.9.0</spotless-maven-plugin.version>
   </properties>
 
@@ -97,8 +98,28 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
+          <failIfNoTests>true</failIfNoTests>
           <useModulePath>false</useModulePath>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>${maven-surefire-report-plugin.version}</version>
+        <configuration>
+          <linkXRef>false</linkXRef>
+          <outputDirectory>${project.build.directory}/reports</outputDirectory>
+          <outputName>mobile-test-report</outputName>
+        </configuration>
+        <executions>
+          <execution>
+            <id>generate-test-report</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report-only</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
