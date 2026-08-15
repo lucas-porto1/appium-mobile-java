@@ -9,6 +9,7 @@
   <version>1.0.0</version>
   <name>Appium Mobile Java</name>
   <description>Android mobile test automation reference project with Appium and Java.</description>
+  <url>https://github.com/lucas-porto1/appium-mobile-java</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
