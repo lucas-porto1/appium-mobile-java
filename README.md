@@ -1,6 +1,8 @@
-# Appium Mobile Java Reference
+# Appium Mobile — Java Reference
 
-[![Mobile Tests](https://github.com/lucas-porto1/appium-mobile-java/actions/workflows/mobile-tests.yml/badge.svg?branch=main)](https://github.com/lucas-porto1/appium-mobile-java/actions/workflows/mobile-tests.yml)
+[![CI](https://github.com/lucas-porto1/appium-mobile-java/actions/workflows/mobile-tests.yml/badge.svg?branch=main)](https://github.com/lucas-porto1/appium-mobile-java/actions/workflows/mobile-tests.yml)
+
+_Part of [Lucas Porto's QA Automation Reference Collection](https://github.com/lucas-porto1): QA-first templates built for readability, reproducibility, and sustainable maintenance._
 
 A modern Android test automation reference project using Appium 3, Java, JUnit, Maven, and the UiAutomator2 driver.
 
