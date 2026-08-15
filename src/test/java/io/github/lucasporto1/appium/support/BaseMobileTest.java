@@ -19,6 +19,7 @@ public abstract class BaseMobileTest {
   void startSession() {
     environment = TestEnvironment.load();
     driver = DriverFactory.create(environment);
+    ApplicationReady.waitUntilReady(driver, environment);
   }
 
   @AfterEach
