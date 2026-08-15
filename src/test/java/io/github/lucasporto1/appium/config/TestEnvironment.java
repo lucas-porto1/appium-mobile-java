@@ -12,6 +12,8 @@ public record TestEnvironment(
     Path appPath,
     String deviceName,
     Optional<String> deviceUdid,
+    String appPackage,
+    String appActivity,
     Duration elementTimeout,
     Duration newCommandTimeout) {
 
@@ -29,6 +31,8 @@ public record TestEnvironment(
         appPath,
         value(dotenv, "ANDROID_DEVICE_NAME", "Android Emulator"),
         optionalValue(dotenv, "ANDROID_UDID"),
+        value(dotenv, "ANDROID_APP_PACKAGE", "io.appium.android.apis"),
+        value(dotenv, "ANDROID_APP_ACTIVITY", "io.appium.android.apis.ApiDemos"),
         seconds(dotenv, "ELEMENT_TIMEOUT_SECONDS", 15),
         seconds(dotenv, "NEW_COMMAND_TIMEOUT_SECONDS", 120));
   }

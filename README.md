@@ -1,6 +1,6 @@
-# Appium Mobile - Java Reference
+# Appium Mobile Java Reference
 
-[![Mobile Tests](https://github.com/lucas-porto1/appium-mobile-java/actions/workflows/mobile-tests.yml/badge.svg?branch=master)](https://github.com/lucas-porto1/appium-mobile-java/actions/workflows/mobile-tests.yml)
+[![Mobile Tests](https://github.com/lucas-porto1/appium-mobile-java/actions/workflows/mobile-tests.yml/badge.svg?branch=main)](https://github.com/lucas-porto1/appium-mobile-java/actions/workflows/mobile-tests.yml)
 
 A modern Android test automation reference project using Appium 3, Java, JUnit, Maven, and the UiAutomator2 driver.
 
@@ -159,6 +159,8 @@ The downloaded APK is stored under `apps/` locally and is intentionally ignored 
 | `ANDROID_DEVICE_NAME` | Human-readable device name | `Android Emulator` |
 | `ANDROID_UDID` | Specific emulator or device identifier | `emulator-5554` |
 | `APP_PATH` | Relative or absolute APK path | `apps/ApiDemos-debug.apk` |
+| `ANDROID_APP_PACKAGE` | Android application package | `io.appium.android.apis` |
+| `ANDROID_APP_ACTIVITY` | Android launch activity | `io.appium.android.apis.ApiDemos` |
 | `ELEMENT_TIMEOUT_SECONDS` | Explicit UI wait timeout | `15` |
 | `NEW_COMMAND_TIMEOUT_SECONDS` | Appium session inactivity timeout | `120` |
 
@@ -179,7 +181,9 @@ Tests run sequentially because the default environment provides a single Android
 
 Maven Surefire writes machine-readable XML and text results to `target/surefire-reports/`. Running `./mvnw verify` also creates the human-readable report at `target/reports/mobile-test-report.html`.
 
-In CI, a failing test is rerun once to identify intermittent behavior. A test that passes only on the retry produces a visible workflow warning and remains recorded as flaky in the report. A failure that persists after the retry fails the workflow. Test reports are uploaded for every run. Screenshots, page sources, device logcat, and the Appium server log are uploaded when the workflow fails.
+The latest report from the default branch is available at [lucas-porto1.github.io/appium-mobile-java](https://lucas-porto1.github.io/appium-mobile-java/), so it can be opened directly without downloading an artifact. GitHub Actions artifacts are retained only after failures, when raw logs and diagnostics are useful.
+
+In CI, a failing test is rerun once to identify intermittent behavior. A test that passes only on the retry produces a visible workflow warning and remains recorded as flaky in the report. A failure that persists after the retry fails the workflow. Screenshots, page sources, device logcat, raw results, and the Appium server log are retained when the workflow fails.
 
 ## Adding a feature
 
@@ -192,8 +196,8 @@ In CI, a failing test is rerun once to identify intermittent behavior. A test th
 
 ## Continuous integration
 
-GitHub Actions provisions Java and Node.js, installs the pinned Appium toolchain, downloads the demo APK, boots an Android API 35 emulator, starts Appium, and runs the complete suite. Reports and failure diagnostics are uploaded as short-lived artifacts.
+GitHub Actions provisions Java and Node.js, installs the pinned Appium toolchain, downloads the demo APK, boots an Android API 35 emulator, starts Appium, and runs the complete suite. After pushes to `main`, it publishes the HTML report to GitHub Pages and places the direct URL in the deployment summary. Pull requests do not replace the published report.
 
 No secrets are required for the public ApiDemos application. Real application credentials must be stored in a local `.env` file and GitHub Actions secrets, never committed to the repository.
 
-Failure screenshots, page sources, logs, and reports can contain application data. Review the repository visibility and artifact retention policy before using this template with sensitive environments.
+Failure screenshots, page sources, logs, and reports can contain application data. Disable the Pages publishing job or use access-controlled reporting infrastructure before reusing this setup with sensitive client systems.

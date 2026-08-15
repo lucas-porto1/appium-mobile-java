@@ -14,6 +14,9 @@ public final class DriverFactory {
         new UiAutomator2Options()
             .setDeviceName(environment.deviceName())
             .setApp(environment.appPath().toString())
+            .setAppPackage(environment.appPackage())
+            .setAppActivity(environment.appActivity())
+            .setAppWaitActivity(environment.appActivity())
             .setAutoGrantPermissions(true)
             .setNoReset(false)
             .setNewCommandTimeout(environment.newCommandTimeout());
