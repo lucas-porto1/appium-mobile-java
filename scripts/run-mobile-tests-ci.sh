@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+# Prevent emulator system error dialogs, such as launcher ANRs, from covering the app under test.
+adb shell settings put global hide_error_dialogs 1
+
 appium_status_url="${APPIUM_SERVER_URL:-http://127.0.0.1:4723}"
 appium_status_url="${appium_status_url%/}/status"
 
