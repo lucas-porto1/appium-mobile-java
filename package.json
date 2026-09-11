@@ -12,7 +12,7 @@
     "appium:drivers": "appium driver list --installed"
   },
   "devDependencies": {
-    "appium": "^3.6.0",
+    "appium": "^3.7.0",
     "appium-uiautomator2-driver": "^8.4.0"
   },
   "allowScripts": {
